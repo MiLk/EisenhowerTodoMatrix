@@ -1,1 +1,3 @@
 th { background-color: #EEE; }
+.deleted { text-decoration: line-through; }
+button.btn { float: right; }
