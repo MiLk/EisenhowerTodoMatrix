@@ -1,86 +1,102 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Eisenhower Todo Matrix</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
-    <link href="css/style.css" rel="stylesheet" media="screen">
-  </head>
-  <body>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span12">
-          <h1>Don't waste time, organize your tasks !</h1>
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th style="width: 20%;"></th>
-                <th style="width: 40%;">Urgent</th>
-                <th style="width: 40%;">Not urgent</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="important">
-                <th>Important</th>
-                <td class="urgent">
-                  <button class="btn"><i class="icon-plus"></i></button>
-                  <form id="A" class="form-inline">
-                    <div class="btn-group">
-                      <input type="text" placeholder="Your task ..." />
-                      <input type="submit" class="btn btn-primary" value="Add" />
-                    </div>
-                  </form>
-                  <ul>
-                  </ul>
-                </td>
-                <td class="not-urgent">
-                  <button class="btn"><i class="icon-plus"></i></button>
-                  <form id="B" class="form-inline">
-                    <div class="btn-group">
-                      <input type="text" placeholder="Your task ..." />
-                      <input type="submit" class="btn btn-primary" value="Add" />
-                    </div>
-                  </form>
-                  <ul>
-                  </ul>
-                </td>
-              </tr>
-              <tr class="not-important">
-                <th>Not important</th>
-                <td class="urgent">
-                  <button class="btn"><i class="icon-plus"></i></button>
-                  <form id="C" class="form-inline">
-                    <div class="btn-group">
-                      <input type="text" placeholder="Your task ..." />
-                      <input type="submit" class="btn btn-primary" value="Add" />
-                    </div>
-                  </form>
-                  <ul>
-                  </ul>
-                </td>
-                <td class="not-urgent">
-                  <button class="btn"><i class="icon-plus"></i></button>
-                  <form id="D" class="form-inline">
-                    <div class="btn-group">
-                      <input type="text" placeholder="Your task ..." />
-                      <input type="submit" class="btn btn-primary" value="Add" />
-                    </div>
-                  </form>
-                  <ul>
-                  </ul>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <p>
-            Double click in a cell to add a task.
-          </p>
-        </div>
-      </div>
+<html ng-app>
+<head>
+  <title>Eisenhower Todo Matrix</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+  <link href="css/style.css" rel="stylesheet" media="screen">
+</head>
+<body ng-controller="MatrixCtrl">
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12">
+      <h1>Don't waste time, organize your tasks !</h1>
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th style="width: 20%;"></th>
+          <th style="width: 40%;">Urgent</th>
+          <th style="width: 40%;">Not urgent</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="important">
+          <th>Important</th>
+          <td class="urgent">
+            <button class="btn" ng-click="showFormUI =! showFormUI"><i class="icon-plus"></i></button>
+            <form ng-submit="submit('UI')" ng-show="showFormUI" class="form-inline">
+              <div class="btn-group">
+                <input type="text" ng-model="text" placeholder="Your task ..."/>
+                <input type="submit" class="btn btn-primary" value="Add"/>
+              </div>
+            </form>
+            <ul>
+              <li ng-repeat="task in tasks['UI']" ng-click="remove($event)" data-list="UI" data-id="{{ task.id }}">
+                {{ task.name }}
+              </li>
+            </ul>
+          </td>
+          <td class="not-urgent">
+            <button class="btn" ng-click="showFormNUI =! showFormNUI"><i class="icon-plus"></i></button>
+            <form ng-submit="submit('NUI')" ng-show="showFormNUI" class="form-inline">
+              <div class="btn-group">
+                <input type="text" ng-model="text" placeholder="Your task ..."/>
+                <input type="submit" class="btn btn-primary" value="Add"/>
+              </div>
+            </form>
+            <ul>
+              <li ng-repeat="task in tasks['NUI']" ng-click="remove($event)" data-list="NUI" data-id="{{ task.id }}">
+                {{ task.name }}
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr class="not-important">
+          <th>Not important</th>
+          <td class="urgent">
+            <button class="btn" ng-click="showFormUNI =! showFormUNI"><i class="icon-plus"></i></button>
+            <form ng-submit="submit('UNI')" ng-show="showFormUNI" class="form-inline">
+              <div class="btn-group">
+                <input type="text" ng-model="text" placeholder="Your task ..."/>
+                <input type="submit" class="btn btn-primary" value="Add"/>
+              </div>
+            </form>
+            <ul>
+              <li ng-repeat="task in tasks['UNI']" ng-click="remove($event)" data-list="UNI" data-id="{{ task.id }}">
+                {{ task.name }}
+              </li>
+            </ul>
+          </td>
+          <td class="not-urgent">
+            <button class="btn" ng-click="showFormNUNI =! showFormNUNI"><i class="icon-plus"></i></button>
+            <form ng-submit="submit('NUNI')" ng-show="showFormNUNI" class="form-inline">
+              <div class="btn-group">
+                <input type="text" ng-model="text" placeholder="Your task ..."/>
+                <input type="submit" class="btn btn-primary" value="Add"/>
+              </div>
+            </form>
+            <ul>
+              <li ng-repeat="task in tasks['NUNI']" ng-click="remove($event)" data-list="NUNI" data-id="{{ task.id }}">
+                {{ task.name }}
+              </li>
+            </ul>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <h2>Completed tasks</h2>
+      <ul>
+        <li ng-repeat="task in tasks['done']" ng-click="remove($event)" data-list="done" data-id="{{ task.id }}">
+          {{ task.name }}
+        </li>
+      </ul>
     </div>
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/underscore-min.js"></script>
-    <script src="js/app.js"></script>
-  </body>
+  </div>
+</div>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+<script src="js/underscore-min.js"></script>
+<script src="js/app.js"></script>
+</body>
 </html>
