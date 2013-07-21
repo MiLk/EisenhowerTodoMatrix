@@ -1,3 +1,17 @@
-th { background-color: #EEE; }
-.deleted { text-decoration: line-through; }
-button.btn { float: right; }
+@media (min-width: 1000px) {
+    body {
+        padding-top: 60px;
+    }
+}
+
+th {
+    background-color: #EEE;
+}
+
+.deleted {
+    text-decoration: line-through;
+}
+
+table button.btn {
+    float: right;
+}

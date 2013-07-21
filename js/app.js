@@ -1,13 +1,20 @@
+angular.module('Matrix', [])
+  .config(['$routeProvider', function ($routeProvider) {
+    $routeProvider.
+      when('/', { templateUrl: 'partials/home.html', controller: HomeCtrl }).
+      when('/todo/:docId', { templateUrl: 'partials/matrix.html', controller: MatrixCtrl }).
+      otherwise({ redirectTo: '/' });
+  }]);
+
 function onError(data, status, headers, config) {
   console.error(status);
   console.error(data);
 };
 
-function MatrixCtrl($scope, $http) {
+var api_url = 'http://my.couchdb.server:5984/eisenhower';
 
-  var api_url = 'http://couchdb.emilienkenler.com:5984/eisenhower';
-
-  $scope.docID = null;
+function MatrixCtrl($scope, $http, $routeParams) {
+  $scope.docID = $routeParams.docId;
   $scope.tasks = {
     'UI': [],
     'NUI': [],
@@ -17,33 +24,27 @@ function MatrixCtrl($scope, $http) {
     'id': 1
   };
 
-  $http({
-    method: 'GET',
-    url: api_url + '/_all_docs'
-  }).success(function(data, status, headers, config) {
-    $scope.docID = data.rows[0].id;
-    $http({
-      method: 'GET',
-      url: api_url + '/' + $scope.docID
-    }).success(function(data, status, headers, config) {
-        $scope.tasks = data;
-        $scope.$watch('tasks', function(newValue, oldValue) {
-          if(  oldValue.UI.length == newValue.UI.length
-            && oldValue.UNI.length == newValue.UNI.length
-            && oldValue.NUI.length == newValue.NUI.length
-            && oldValue.NUNI.length == newValue.NUNI.length
-            && oldValue.done.length == newValue.done.length
-            ) return;
-          $http({
-            method: 'PUT',
-            url: api_url + '/' +  $scope.docID,
-            data: $scope.tasks
-          }).success(function(data, status, headers, config) {
-            console.log('Saved');
-          }).error(onError);
-        }, true);
-    }).error(onError);
-  }).error(onError);
+      $http({
+        method: 'GET',
+        url: api_url + '/' + $scope.docID
+      }).success(function (data, status, headers, config) {
+          $scope.tasks = data;
+          $scope.$watch('tasks', function (newValue, oldValue) {
+            if (oldValue.UI.length == newValue.UI.length
+              && oldValue.UNI.length == newValue.UNI.length
+              && oldValue.NUI.length == newValue.NUI.length
+              && oldValue.NUNI.length == newValue.NUNI.length
+              && oldValue.done.length == newValue.done.length
+              ) return;
+            $http({
+              method: 'PUT',
+              url: api_url + '/' + $scope.docID,
+              data: $scope.tasks
+            }).success(function (data, status, headers, config) {
+                console.log('Saved');
+              }).error(onError);
+          }, true);
+        }).error(onError);
 
   $scope.submit = function (list) {
     if (this.text) {
@@ -66,3 +67,33 @@ function MatrixCtrl($scope, $http) {
     });
   }
 }
+
+function HomeCtrl($scope, $http) {
+  $scope.users = [];
+
+  $http({
+    method: 'GET',
+    url: api_url + '/_design/users/_view/list'
+  }).success(function (data, status, headers, config) {
+      $scope.users = data.rows;
+    }).error(onError);
+
+  $scope.new = function() {
+    var doc = {
+      'UI': [],
+      'NUI': [],
+      'UNI': [],
+      'NUNI': [],
+      'done': [],
+      'id': 1,
+      'user': $('#inputName').val()
+    };
+    $http({
+      method: 'POST',
+      url: api_url + '/',
+      data: doc
+    }).success(function (data, status, headers, config) {
+        window.location = '/#/todo/'+data.id;
+    }).error(onError);
+  }
+};

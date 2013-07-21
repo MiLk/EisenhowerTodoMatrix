@@ -1,0 +1,17 @@
+<div class="span12" ng-controller="HomeCtrl">
+  <h1>Don't waste time, organize your tasks !</h1>
+
+  <h2>Create a new ToDo Matrix</h2>
+  <div class="input-append">
+    <input type="text" id="inputName" placeholder="Your name or project name"/>
+    <button class="btn" ng-click="new()"><i class="icon-plus"></i></button>
+  </div>
+  <h2>Open an existing ToDo Matrix</h2>
+  <ul>
+    <li ng-repeat="user in users">
+      <a href="/#/todo/{{ user.id }}">
+        {{ user.key }}
+      </a>
+    </li>
+  </ul>
+</div>
