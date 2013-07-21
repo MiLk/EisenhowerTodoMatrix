@@ -23,28 +23,32 @@ function MatrixCtrl($scope, $http, $routeParams) {
     'done': [],
     'id': 1
   };
+  $scope.rev = 0;
 
-      $http({
-        method: 'GET',
-        url: api_url + '/' + $scope.docID
-      }).success(function (data, status, headers, config) {
-          $scope.tasks = data;
-          $scope.$watch('tasks', function (newValue, oldValue) {
-            if (oldValue.UI.length == newValue.UI.length
-              && oldValue.UNI.length == newValue.UNI.length
-              && oldValue.NUI.length == newValue.NUI.length
-              && oldValue.NUNI.length == newValue.NUNI.length
-              && oldValue.done.length == newValue.done.length
-              ) return;
-            $http({
-              method: 'PUT',
-              url: api_url + '/' + $scope.docID,
-              data: $scope.tasks
-            }).success(function (data, status, headers, config) {
-                console.log('Saved');
-              }).error(onError);
-          }, true);
-        }).error(onError);
+  $http({
+    method: 'GET',
+    url: api_url + '/' + $scope.docID
+  }).success(function (data, status, headers, config) {
+      $scope.tasks = data;
+      $scope.rev = $scope.tasks._rev.match(/^(\d+)/)[1];
+      $scope.$watch('tasks', function (newValue, oldValue) {
+        if (oldValue.UI.length == newValue.UI.length
+          && oldValue.UNI.length == newValue.UNI.length
+          && oldValue.NUI.length == newValue.NUI.length
+          && oldValue.NUNI.length == newValue.NUNI.length
+          && oldValue.done.length == newValue.done.length
+          ) return;
+        $http({
+          method: 'PUT',
+          url: api_url + '/' + $scope.docID,
+          data: $scope.tasks
+        }).success(function (data, status, headers, config) {
+            console.log('Saved with rev ' + data.rev);
+            $scope.tasks._rev = data.rev;
+            $scope.rev = $scope.tasks._rev.match(/^(\d+)/)[1];
+          }).error(onError);
+      }, true);
+    }).error(onError);
 
   $scope.submit = function (list) {
     if (this.text) {
@@ -78,7 +82,7 @@ function HomeCtrl($scope, $http) {
       $scope.users = data.rows;
     }).error(onError);
 
-  $scope.new = function() {
+  $scope.new = function () {
     var doc = {
       'UI': [],
       'NUI': [],
@@ -93,7 +97,7 @@ function HomeCtrl($scope, $http) {
       url: api_url + '/',
       data: doc
     }).success(function (data, status, headers, config) {
-        window.location = '/#/todo/'+data.id;
-    }).error(onError);
+        window.location = '/#/todo/' + data.id;
+      }).error(onError);
   }
 };
