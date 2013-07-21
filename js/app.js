@@ -99,7 +99,7 @@ function HomeCtrl($scope, $http) {
       url: api_url + '/',
       data: doc
     }).success(function (data, status, headers, config) {
-        window.location = '/#/todo/' + data.id;
+        window.location = '#/todo/' + data.id;
       }).error(onError);
   }
 };

@@ -25,7 +25,6 @@ You have to create the database and the view:
 ```
 curl -i -X PUT http://my.couchdb.server:5984/eisenhower
 curl -i -X PUT http://my.couchdb.server:5984/eisenhower/_design/users -d @couchdb/users.json
-
 ```
 
 ## Configuring Application
@@ -35,6 +34,10 @@ Just modify the `api_url` variable in `js/app.js`.
 ## Usage
 
 Just open the HTML file in your browser. (Must be served via http protocole and not file://).
+
+## Demo
+
+A live demo is accessible at this address: <http://milk.github.io/EisenhowerTodoMatrix/>.
 
 ## License
 
