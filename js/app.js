@@ -11,7 +11,7 @@ function onError(data, status, headers, config) {
   console.error(data);
 };
 
-var api_url = 'http://my.couchdb.server:5984/eisenhower';
+var api_url = 'http://couchdb.emilienkenler.com:5984/eisenhower';
 
 function MatrixCtrl($scope, $http, $routeParams) {
   $scope.docID = $routeParams.docId;
