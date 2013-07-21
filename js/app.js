@@ -21,7 +21,8 @@ function MatrixCtrl($scope, $http, $routeParams) {
     'UNI': [],
     'NUNI': [],
     'done': [],
-    'id': 1
+    'id': 1,
+    'date': ''
   };
   $scope.rev = 0;
 
@@ -38,6 +39,7 @@ function MatrixCtrl($scope, $http, $routeParams) {
           && oldValue.NUNI.length == newValue.NUNI.length
           && oldValue.done.length == newValue.done.length
           ) return;
+        $scope.tasks.date = new Date();
         $http({
           method: 'PUT',
           url: api_url + '/' + $scope.docID,
